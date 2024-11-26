@@ -19,6 +19,10 @@ android {
         version = "0.8.8"
     }
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
+
     defaultConfig {
         applicationId = "com.kirabium.relayance"
         minSdk = 24
@@ -113,4 +117,30 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Espresso pour les tests UI (integration tests)
+    androidTestImplementation ("androidx.test.ext:junit:1.2.1")
+    // Activity testing support
+    androidTestImplementation ("androidx.activity:activity-compose:1.6.0")
+    // Jetpack Compose Test
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0")
+    // Espresso contrib for RecyclerView testing
+    androidTestImplementation ("androidx.test.espresso:espresso-contrib:3.6.1")
+
+    // Espresso Intents for Intent testing
+    androidTestImplementation ("androidx.test.espresso:espresso-intents:3.6.1")
+
+
+    // Jetpack Compose UI testing for Compose-based apps
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0")
+
+    // Jetpack Activity Compose for launching activities in tests
+    androidTestImplementation ("androidx.activity:activity-compose:1.6.0")
+
+    // Espresso core and Espresso contrib for RecyclerView testing
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.0")
+
+    // JUnit for testing
+    androidTestImplementation ("androidx.test.espresso:espresso-idling-resource:3.5.0")
+
 }
