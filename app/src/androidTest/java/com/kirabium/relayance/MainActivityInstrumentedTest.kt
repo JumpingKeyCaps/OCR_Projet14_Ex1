@@ -25,6 +25,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * Test d'intégration de l'activité principale
+ */
 @RunWith(AndroidJUnit4::class)
 class MainActivityInstrumentedTest {
 
