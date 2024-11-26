@@ -3,6 +3,8 @@ import com.android.build.gradle.BaseExtension
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
     id("jacoco")
 }
 tasks.withType<Test> {
@@ -64,7 +66,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
@@ -142,5 +144,8 @@ dependencies {
 
     // JUnit for testing
     androidTestImplementation ("androidx.test.espresso:espresso-idling-resource:3.5.0")
+
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
 
 }
