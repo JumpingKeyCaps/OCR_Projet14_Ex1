@@ -1,7 +1,9 @@
 package com.kirabium.relayance
 
+import com.kirabium.relayance.extension.DateExt
 import com.kirabium.relayance.extension.DateExt.Companion.toHumanDate
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -99,4 +101,37 @@ class DateExtTest {
         // Assert
         assertEquals(expected, result)
     }
+
+
+    /**
+     * Vérifie que la méthode d'extension du companion object est appelée correctement
+     */
+    @Test
+    fun companionObject_toHumanDate_formatsDateCorrectly() {
+        // Arrange
+        calendar.set(2024, Calendar.DECEMBER, 25)
+        val expected = "25/12/2024"
+        val testDate = calendar.time
+
+        // Act
+        val result = with(DateExt.Companion) { testDate.toHumanDate() }
+
+        // Assert
+        assertEquals(expected, result)
+    }
+
+    /**
+     * Vérifie que le `companion object` est correctement instancié
+     */
+    @Test
+    fun companionObject_isInstantiated() {
+        // Act
+        val companion = DateExt.Companion
+
+        // Assert
+        assertNotNull(companion) // Vérifie que le companion object existe
+    }
+
+
+
 }
