@@ -22,7 +22,11 @@ class CustomerRepository @Inject constructor(private val customerService: Custom
      * @return un Resulat contenant le client ajouté ou une exception.
      */
     suspend fun addCustomer(customer: Customer): Result<Customer> {
-        return customerService.addCustomer(customer)
+        return try {
+            customerService.addCustomer(customer)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     /**
