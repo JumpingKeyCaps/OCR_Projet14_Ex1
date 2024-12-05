@@ -1,10 +1,10 @@
 package com.kirabium.relayance.ui.activity
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.kirabium.relayance.databinding.ActivityAddCustomerBinding
 import com.kirabium.relayance.ui.viewmodel.AddCustomerViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,9 +54,13 @@ class AddCustomerActivity : AppCompatActivity() {
             val email = binding.emailEditText.text.toString()
 
             if (name.isNotEmpty() && email.isNotEmpty()) {
-                viewModel.addCustomer(name, email)
+                if (!viewModel.isValidEmail(email)) {
+                    Snackbar.make(binding.root, "Invalid email format", Snackbar.LENGTH_LONG).show()
+                } else {
+                    viewModel.addCustomer(name, email)
+                }
             } else {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                Snackbar.make(binding.root, "Please fill in all fields", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -73,13 +77,17 @@ class AddCustomerActivity : AppCompatActivity() {
                     }
                     result.isSuccess -> {
                         // Le client a été ajouté avec succès
-                        Toast.makeText(this@AddCustomerActivity, "Customer added successfully", Toast.LENGTH_SHORT).show()
-                        finish()  // Fermer l'activité et revenir à la précédente
+                        Snackbar.make(binding.root, "Customer added successfully", Snackbar.LENGTH_LONG)
+                            .setAction("OK") {
+                                finish() // Fermer l'activité après confirmation
+                            }
+                            .show()
                     }
                     result.isFailure -> {
                         // Une erreur est survenue
                         val error = result.exceptionOrNull()
-                        Toast.makeText(this@AddCustomerActivity, "Failed to add customer: ${error?.message}", Toast.LENGTH_SHORT).show()
+                        val message = error?.message ?: "Failed to add customer"
+                        Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
                     }
                 }
             }
