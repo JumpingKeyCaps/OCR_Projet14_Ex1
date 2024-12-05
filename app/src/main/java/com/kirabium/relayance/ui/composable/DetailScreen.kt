@@ -1,5 +1,6 @@
 package com.kirabium.relayance.ui.composable
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,26 +23,63 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.kirabium.relayance.R
 import com.kirabium.relayance.domain.model.Customer
 import com.kirabium.relayance.extension.DateExt.Companion.toHumanDate
-import java.util.Date
+import com.kirabium.relayance.ui.viewmodel.DetailViewModel
+
+@Composable
+fun DetailScreen(
+    customerId: Int,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: DetailViewModel = hiltViewModel()
+) {
+
+    // Charger les données une seule fois
+    LaunchedEffect(customerId) {
+        if (customerId != -1) {
+            viewModel.getCustomerById(customerId)
+        }
+    }
+
+    val customer by viewModel.customer.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    // Afficher les erreurs si elles existent
+    error?.let {
+        Toast.makeText(LocalContext.current, it, Toast.LENGTH_LONG).show()
+    }
+
+    customer?.let {
+        DetailContent(
+            customer = it,
+            onBackClick = onBackClick,
+            modifier = modifier
+        )
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(
-    modifier: Modifier = Modifier,
+fun DetailContent(
     customer: Customer,
     onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier,
@@ -126,8 +164,12 @@ fun DetailScreen(
     }
 }
 
+
+
+
+
 @Preview
 @Composable
 private fun DetailScreenPreview() {
-    DetailScreen(customer = Customer(0, "Nom du Client", "email@client.com", Date())) {}
+    DetailScreen(1, {})
 }
