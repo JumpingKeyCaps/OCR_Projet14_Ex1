@@ -55,8 +55,6 @@ android {
         debug {
             enableAndroidTestCoverage = true
             enableUnitTestCoverage = true
-            isMinifyEnabled = false
-            isShrinkResources = false
         }
     }
     compileOptions {
