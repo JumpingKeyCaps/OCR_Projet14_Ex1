@@ -96,6 +96,7 @@ val jacocoTestReport by tasks.registering(JacocoReport::class) {
 
     val kotlinDebugClassesDir = fileTree("${project.buildDir}/tmp/kotlin-classes/debug/") {
 
+        exclude("**/R$*.class")
         exclude("**/com/kirabium/relayance/ui/composable/*$*.class")
         exclude("**/com/kirabium/relayance/ui/activity/*$*.class")
         exclude("**/com/kirabium/relayance/ui/adapter/*$*.class")
