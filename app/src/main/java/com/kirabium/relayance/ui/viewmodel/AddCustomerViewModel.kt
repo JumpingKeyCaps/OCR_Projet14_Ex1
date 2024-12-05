@@ -37,4 +37,17 @@ class AddCustomerViewModel @Inject constructor(private val customerRepository: C
             }
         }
     }
+
+
+    /**
+     * Vérifie si une adresse email a un format valide.
+     * @param email L'adresse email à vérifier.
+     * @return true si l'email est valide, sinon false.
+     */
+    fun isValidEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
+        return email.matches(emailRegex)
+    }
+
+
 }
