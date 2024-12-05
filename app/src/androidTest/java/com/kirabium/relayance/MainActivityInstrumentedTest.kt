@@ -2,7 +2,7 @@ package com.kirabium.relayance
 
 import android.content.Intent
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
@@ -32,7 +32,7 @@ import org.junit.runner.RunWith
 class MainActivityInstrumentedTest {
 
     @get:Rule
-    val composeTestRule = createComposeRule()
+    val composeTestRule = createAndroidComposeRule<DetailActivity>()
 
     @Before
     fun setUp() {
