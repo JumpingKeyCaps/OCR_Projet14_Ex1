@@ -32,7 +32,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+      //  testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner  = "io.cucumber.android.runner.CucumberAndroidJUnitRunner"
+
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -53,6 +55,8 @@ android {
         debug {
             enableAndroidTestCoverage = true
             enableUnitTestCoverage = true
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
     compileOptions {
@@ -73,12 +77,16 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
+
+
 }
 
 val androidExtension = extensions.getByType<BaseExtension>()
 
 val jacocoTestReport by tasks.registering(JacocoReport::class) {
-    dependsOn("testDebugUnitTest", "createDebugCoverageReport")
+    dependsOn("testDebugUnitTest","connectedDebugAndroidTest", "createDebugCoverageReport")
     group = "Reporting"
     description = "Generate Jacoco coverage reports"
 
@@ -87,13 +95,26 @@ val jacocoTestReport by tasks.registering(JacocoReport::class) {
         html.required.set(true)
     }
 
-    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug")
+
+    val kotlinDebugClassesDir = fileTree("${project.buildDir}/tmp/kotlin-classes/debug/") {
+
+        exclude("**/com/kirabium/relayance/ui/composable/*$*.class")
+        exclude("**/com/kirabium/relayance/ui/activity/*$*.class")
+        exclude("**/com/kirabium/relayance/ui/adapter/*$*.class")
+        exclude("**/com/kirabium/relayance/ui/viewmodel/*$*.class")
+        exclude("**/com/kirabium/relayance/data/service/*$*.class")
+        exclude("**/com/kirabium/relayance/ui/RelayanceApplication.class")
+    }
+
+
+
+
     val mainSrc = androidExtension.sourceSets.getByName("main").java.srcDirs
 
-    classDirectories.setFrom(debugTree)
+    classDirectories.setFrom(kotlinDebugClassesDir)
     sourceDirectories.setFrom(files(mainSrc))
-    executionData.setFrom(fileTree(buildDir) {
-        include("**/*.exec", "**/*.ec")
+    executionData.setFrom(fileTree(project.buildDir) {
+          include("**/*.exec", "**/*.ec")
     })
 }
 
@@ -112,7 +133,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -128,24 +149,43 @@ dependencies {
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0")
     // Espresso contrib for RecyclerView testing
     androidTestImplementation ("androidx.test.espresso:espresso-contrib:3.6.1")
-
     // Espresso Intents for Intent testing
     androidTestImplementation ("androidx.test.espresso:espresso-intents:3.6.1")
-
-
     // Jetpack Compose UI testing for Compose-based apps
     androidTestImplementation ("androidx.compose.ui:ui-test-junit4:1.5.0")
-
     // Jetpack Activity Compose for launching activities in tests
     androidTestImplementation ("androidx.activity:activity-compose:1.6.0")
-
     // Espresso core and Espresso contrib for RecyclerView testing
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.0")
-
     // JUnit for testing
     androidTestImplementation ("androidx.test.espresso:espresso-idling-resource:3.5.0")
 
+
+
+
+    //Hilt (DI)
     implementation(libs.hilt)
+    implementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
     ksp(libs.hilt.compiler)
+
+
+
+    //Cumcumber -------------
+    // Cucumber pour les tests Android
+    androidTestImplementation ("io.cucumber:cucumber-android:7.18.1")
+    androidTestImplementation ("io.cucumber:cucumber-java:7.20.1")
+    androidTestImplementation ("io.cucumber:cucumber-junit:7.20.1")
+
+
+
+    // [Unit Test stuff]  ----------------
+    testImplementation(libs.junit)
+    // MockK for unit testing
+    testImplementation ("io.mockk:mockk:1.13.5")
+    // Coroutine testing (for runTest and TestDispatcher)
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+    // AndroidX Core Testing  useful for Flow testing)
+    testImplementation ("androidx.arch.core:core-testing:2.2.0")
+
 
 }
